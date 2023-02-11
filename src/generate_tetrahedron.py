@@ -2,7 +2,7 @@ import random # type: ignore
 import numpy as np
 
 
-def generateTetrahedron() -> tuple(list, list):
+def generateTetrahedron() -> tuple[list[np.ndarray], list[np.ndarray]]:
     """ランダムな三角錐を生成します"""
     positions = []
     for _ in range(4):
@@ -12,7 +12,7 @@ def generateTetrahedron() -> tuple(list, list):
     return connect2Tetrahedron(positions)
 
 
-def connect2Tetrahedron(p: list[np.ndarray]) -> tuple(list, list):
+def connect2Tetrahedron(p: list[np.ndarray]) -> tuple[list[np.ndarray], list[np.ndarray]]:
     """与えられた４点を結びます"""
     assert len(p) == 4, '値が４つの配列を渡してください'
     
