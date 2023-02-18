@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F44A17A29A0D1EC00882F20 /* OrbitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F44A17929A0D1EC00882F20 /* OrbitView.swift */; };
 		9F52F34A2997C09E00E3E4B9 /* Continental_ShelfApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F52F3492997C09E00E3E4B9 /* Continental_ShelfApp.swift */; };
 		9F52F34C2997C09E00E3E4B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F52F34B2997C09E00E3E4B9 /* ContentView.swift */; };
 		9F52F34E2997C09F00E3E4B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F52F34D2997C09F00E3E4B9 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9F44A17929A0D1EC00882F20 /* OrbitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbitView.swift; sourceTree = "<group>"; };
 		9F52F3462997C09E00E3E4B9 /* Continental-Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Continental-Shelf.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F52F3492997C09E00E3E4B9 /* Continental_ShelfApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Continental_ShelfApp.swift; sourceTree = "<group>"; };
 		9F52F34B2997C09E00E3E4B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				9F52F3492997C09E00E3E4B9 /* Continental_ShelfApp.swift */,
 				9F52F34B2997C09E00E3E4B9 /* ContentView.swift */,
+				9F44A17929A0D1EC00882F20 /* OrbitView.swift */,
 				9F52F34D2997C09F00E3E4B9 /* Assets.xcassets */,
 				9F52F34F2997C09F00E3E4B9 /* Preview Content */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F44A17A29A0D1EC00882F20 /* OrbitView.swift in Sources */,
 				9F52F34C2997C09E00E3E4B9 /* ContentView.swift in Sources */,
 				9F52F34A2997C09E00E3E4B9 /* Continental_ShelfApp.swift in Sources */,
 			);
@@ -275,6 +279,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,6 +309,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
