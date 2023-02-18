@@ -38,11 +38,11 @@ def connect2Tetrahedron(p: list[np.ndarray]) -> tuple[list[np.ndarray], list[np.
     if theta < 0:
         # 正しいためそのまま代入
         positions.extend([p[0], p[1], p[2]])
-        normals.append(np.repeat(normalVector, 3))
+        normals.extend([normalVector for _ in range(3)])
     else:
         # 正しくないため反転して代入
         positions.extend([p[0], p[2], p[1]])
-        normals.append(np.repeat(-normalVector, 3))
+        normals.extend([-normalVector for _ in range(3)])
     # endregion
     
     # region 残り3面を確定
@@ -50,7 +50,7 @@ def connect2Tetrahedron(p: list[np.ndarray]) -> tuple[list[np.ndarray], list[np.
         pos_b = positions[(index + 2) % 3]
         positions.extend([p[3], pos_a, pos_b])
         normal = np.cross(pos_a - p[3], pos_b - pos_a)
-        normals.append(np.repeat(normal, 3))
+        normals.extend([normal for _ in range(3)])
     # endregion
     
     return (positions, normals)
