@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.generate_tetrahedron import generateTetrahedron
+from src.object.generate_tetrahedron import generateTetrahedron
 
 app = FastAPI()
 
