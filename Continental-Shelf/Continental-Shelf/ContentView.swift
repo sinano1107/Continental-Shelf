@@ -18,7 +18,7 @@ struct CoralData: Codable {
         var descr = MeshDescriptor()
         descr.positions = MeshBuffers.Positions(positions)
         descr.normals = MeshBuffers.Normals(normals)
-        descr.primitives = .triangles([UInt32](0...12))
+        descr.primitives = .triangles([UInt32](0...UInt32(descr.positions.count)))
         let material = SimpleMaterial()
         let model = ModelEntity(mesh: try! .generate(from: [descr]), materials: [material])
         return model
@@ -33,9 +33,20 @@ struct ContentView: View {
             OrbitView(entity: model, firstRadius: 6)
                 .ignoresSafeArea()
                 .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button(action: getData) {
+                    // リセットボタン
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            getData(endpoint: "tetrahedron")
+                        }) {
                             Image(systemName: "arrow.clockwise")
+                        }
+                    }
+                    // 成長ボタン
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(action: {
+                            getData(endpoint: "growth")
+                        }) {
+                            Image(systemName: "goforward.plus")
                                 .font(.largeTitle)
                         }
                     }
@@ -43,8 +54,8 @@ struct ContentView: View {
         }
     }
     
-    func getData() {
-        guard let url = URL(string: "http://localhost:8000/") else { return }
+    func getData(endpoint: String) {
+        guard let url = URL(string: "http://localhost:8000/" + endpoint) else { return }
         URLSession.shared.dataTask(with: url) {(data, response, error) in
             do {
                 if let data = data {

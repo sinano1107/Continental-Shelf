@@ -7,7 +7,7 @@ else:
     from .incenter import solve_incenter
 
 
-def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_index: int, r: float, render=False):
+def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r: float, render=False):
     '''面を成長させて、その体積を返す。'''
     positions = positions.copy()
     normals = normals.copy()
@@ -25,10 +25,11 @@ def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_i
     # 成長点
     normal_vector = normals[select_start]
     growth_point = incenter + normal_vector * r
-    
     # positions,normalsから成長メッシュを削除
-    del positions[select_start : select_end]
-    del normals[select_start : select_end]
+    positions = np.delete(positions, [select_start, select_start + 1, select_start + 2], axis=0)
+    normals = np.delete(normals, [select_start, select_start + 1, select_start + 2], axis=0)
+    # del positions[select_start : select_end]
+    # del normals[select_start : select_end]
     
     # 成長させた四面体
     growth_tetrahedron = [growth_point]
@@ -38,10 +39,10 @@ def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_i
         growth_tetrahedron.append(p1)
         
         p2 = select_mesh[(i + 1) % 3]
-        positions.extend([growth_point, p1, p2])
+        positions = np.append(positions, [growth_point, p1, p2], axis=0)
         cross = np.cross(p1 - growth_point, p2 - p1)
         normal = cross / np.linalg.norm(cross)
-        normals.extend([normal, normal, normal])
+        normals = np.append(normals, [normal, normal, normal], axis=0)
     
     # 表示
     # ! matpplotlibは少し歪むので注意
@@ -67,6 +68,6 @@ if __name__ == '__main__':
     from generate_tetrahedron import generateTetrahedron
     from normalize import normalize
     positions, normals = generateTetrahedron()
-    positions, normals = growth(positions, normals, 0, 1)
+    positions, normals, _ = growth(positions, normals, 0, 1)
     _, _, normalized_distance = normalize(np.array(positions))
     print(normalized_distance)
