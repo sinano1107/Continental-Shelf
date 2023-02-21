@@ -9,6 +9,9 @@ else:
 
 def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_index: int, r: float, render=False):
     '''面を成長させて、その体積を返す。'''
+    positions = positions.copy()
+    normals = normals.copy()
+    
     # 成長させるメッシュのpositionの範囲
     select_start = select_mesh_index * 3
     select_end = (select_mesh_index + 1) * 3
@@ -27,8 +30,13 @@ def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_i
     del positions[select_start : select_end]
     del normals[select_start : select_end]
     
+    # 成長させた四面体
+    growth_tetrahedron = [growth_point]
+    
     # 新たなメッシュと法線を追加
     for i, p1 in enumerate(select_mesh):
+        growth_tetrahedron.append(p1)
+        
         p2 = select_mesh[(i + 1) % 3]
         positions.extend([growth_point, p1, p2])
         cross = np.cross(p1 - growth_point, p2 - p1)
@@ -52,7 +60,7 @@ def growth(positions: list[np.ndarray], normals: list[np.ndarray], select_mesh_i
         
         plt.show()
     
-    return positions, normals
+    return positions, normals, growth_tetrahedron
 
 
 if __name__ == '__main__':
