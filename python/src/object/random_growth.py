@@ -6,10 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from lib.generate_tetrahedron import generateTetrahedron
 from lib.growth import growth
+from lib.normalize import normalize
 
 
 if __name__ == '__main__':
-    episodes = 1000
+    episodes = 10000
     reward_history = []
     
     for _ in range(episodes):
@@ -20,15 +21,21 @@ if __name__ == '__main__':
         
         # 面をランダムに選択
         select_index = np.random.choice(meshes)
-        select_mesh = positions[select_index * 3 : (select_index + 1) * 3]
         normal_vector = normals[select_index * 3]
         
         # 成長させる長さ
         r = np.random.rand()
         
         # 成長
-        reward = growth(select_mesh, normal_vector, r)
+        positions, normals = growth(positions, normals, select_index, r)
+        
+        # 報酬
+        _, _, normalized_distance = normalize(np.array(positions))
+        reward = normalized_distance.sum() / 3
+        
+        # 保存
         reward_history.append(reward)
     
+    plt.title('mean = {}'.format(np.mean(reward_history)))
     plt.plot(range(episodes), reward_history)
     plt.show()
