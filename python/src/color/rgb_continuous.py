@@ -73,7 +73,7 @@ def difference(rgb, target):
 
 
 if __name__ == '__main__':
-    torch.manual_seed(4)
+    torch.manual_seed(117)
     epochs = 1000
     
     pi = Policy()
@@ -87,20 +87,25 @@ if __name__ == '__main__':
         rgb = torch.tensor([r.item(), g.item(), b.item()])
         
         dif = difference(rgb, target)
-        reward = dif >= 0.6
-        loss = (r_prob + g_prob + b_prob) * reward
+        # 仮想的な報酬をdifから算出
+        reward = dif <= 0.2
+
+        if reward:
+            loss = -(r_prob * g_prob * b_prob)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
         
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            losses = np.append(losses, loss.item())
+        else:
+            losses = np.append(losses, 0)
         
-        losses = np.append(losses, loss.item())
         colors = np.append(colors, [rgb.detach().numpy()], axis=0)
         
         print('\repoch: {}'.format(epoch + 1), end='')
     
     plt.title('target = {}'.format(target), color=target.detach().numpy())
-    plt.plot(range(epochs), losses, label='losses')
+    plt.plot(range(epochs), losses, lw=4, label='losses')
     plt.bar(range(epochs), losses.max(), color=colors, width=1)
     plt.bar(range(epochs), losses.min(), color=colors, width=1)
     plt.legend()
