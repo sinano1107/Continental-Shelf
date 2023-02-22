@@ -3,12 +3,39 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     from incenter import solve_incenter
+    from rotation_matrix import rotate_x, rotate_y
 else:
     from .incenter import solve_incenter
+    from .rotation_matrix import rotate_x, rotate_y
 
 
-def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r: float, render=False):
-    '''面を成長させて、その体積を返す。'''
+def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r: float, rad_x, rad_y, render=False):
+    '''
+    面を成長させて、その体積を返す。
+    
+    Parameters:
+    ------------
+    positions : 
+        成長させるオブジェクトの座標情報
+        
+    normals : 
+        成長させるオブジェクトのオブジェクトの法線情報
+        
+    select_mesh_index : 
+        成長させる面のインデックス
+        
+    r : 
+        成長面の内心から成長点までの長さ
+        
+    rad_x : 
+        成長点のx軸回転（ラジアン -pi/2 ~ pi/2）
+        
+    rad_y : 
+        成長点のy軸回転（ラジアン -pi/2 ~ pi/2）
+    
+    render = False :
+        表をレンダリングするか
+    '''
     positions = positions.copy()
     normals = normals.copy()
     
@@ -22,14 +49,16 @@ def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r
     # 内心
     incenter = solve_incenter(select_mesh[0], select_mesh[1], select_mesh[2])
     
-    # 成長点
+    # 法線
     normal_vector = normals[select_start]
-    growth_point = incenter + normal_vector * r
+    # 法線を回転
+    rotated_vector = rotate_x(normal_vector, rad_x)
+    rotated_vector = rotate_y(rotated_vector, rad_y)
+    # 成長点
+    growth_point = incenter + rotated_vector * r
     # positions,normalsから成長メッシュを削除
     positions = np.delete(positions, [select_start, select_start + 1, select_start + 2], axis=0)
     normals = np.delete(normals, [select_start, select_start + 1, select_start + 2], axis=0)
-    # del positions[select_start : select_end]
-    # del normals[select_start : select_end]
     
     # 成長させた四面体
     growth_tetrahedron = [growth_point]
@@ -49,6 +78,9 @@ def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r
     if render:
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d')
+        ax.set_xlim([-1, 1])
+        ax.set_ylim([-1, 1])
+        ax.set_zlim([-1, 1])
         ax.set_box_aspect((1, 1, 1))
         select_mesh = np.array(select_mesh)
         
@@ -68,6 +100,6 @@ if __name__ == '__main__':
     from generate_tetrahedron import generateTetrahedron
     from normalize import normalize
     positions, normals = generateTetrahedron()
-    positions, normals, _ = growth(positions, normals, 0, 1)
+    positions, normals, _ = growth(positions, normals, 0, 1, np.pi/4, np.pi/4, render=True)
     _, _, normalized_distance = normalize(np.array(positions))
     print(normalized_distance)
