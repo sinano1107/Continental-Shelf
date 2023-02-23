@@ -4,6 +4,7 @@ from src.object.lib.generate_tetrahedron import generateTetrahedron
 from src.object.lib.growth import growth
 from src.object.lib.normalize import normalize
 from src.object.model import ObjectModel
+from src.color.model import ColorModel
 
 
 app = FastAPI()
@@ -43,21 +44,25 @@ def get_growth():
 mesh_count = 30 # 偶数で指定してください
 growth_count = (mesh_count - 4) // 2
 obj_model: ObjectModel
+color_model: ColorModel
 
 # ニューラルネットワークによる確率的なオブジェクトの生成
 @app.get('/generate')
 def get_generate():
-    global obj_model
+    global obj_model, color_model
     
     # modelを新たに生成
     obj_model = ObjectModel()
+    color_model = ColorModel()
     
     # 結晶化
     positions, normals = obj_model.crystallization(growth_count)
+    rgb = color_model.generate()
     
     return {
         'positions': positions.tolist(),
-        'normals': normals.tolist()
+        'normals': normals.tolist(),
+        'rgb': rgb
     }
 
 # ニューラルネットワークの最適化（ユーザーが気に入ったときだけ呼ばれる）
@@ -66,11 +71,14 @@ def get_learn(isGood: bool):
     # リアクションが良いものであれば学習する
     if isGood:
         obj_model.update()
+        color_model.update()
     
     # 新たに結晶化
     positions, normals = obj_model.crystallization(growth_count)
+    rgb = color_model.generate()
     
     return {
         'positions': positions.tolist(),
-        'normals': normals.tolist()
+        'normals': normals.tolist(),
+        'rgb': rgb
     }

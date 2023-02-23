@@ -13,13 +13,15 @@ import SceneKit
 struct CoralData: Codable {
     var positions: [simd_float3]
     var normals: [simd_float3]
+    var rgb: [CGFloat]
     
     func build() -> ModelEntity {
         var descr = MeshDescriptor()
         descr.positions = MeshBuffers.Positions(positions)
         descr.normals = MeshBuffers.Normals(normals)
         descr.primitives = .triangles([UInt32](0...UInt32(descr.positions.count)))
-        let material = SimpleMaterial()
+        let color = UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1)
+        let material = SimpleMaterial(color: color, roughness: 1, isMetallic: false)
         let model = ModelEntity(mesh: try! .generate(from: [descr]), materials: [material])
         return model
     }
