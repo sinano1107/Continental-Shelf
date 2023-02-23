@@ -3,7 +3,7 @@ import numpy as np
 from src.object.lib.generate_tetrahedron import generateTetrahedron
 from src.object.lib.growth import growth
 from src.object.lib.normalize import normalize
-from src.object.model import Model
+from src.object.model import ObjectModel
 
 
 app = FastAPI()
@@ -42,18 +42,18 @@ def get_growth():
 
 mesh_count = 30 # 偶数で指定してください
 growth_count = (mesh_count - 4) // 2
-model: Model
+obj_model: ObjectModel
 
 # ニューラルネットワークによる確率的なオブジェクトの生成
 @app.get('/generate')
 def get_generate():
-    global model
+    global obj_model
     
     # modelを新たに生成
-    model = Model()
+    obj_model = ObjectModel()
     
     # 結晶化
-    positions, normals = model.crystallization(growth_count)
+    positions, normals = obj_model.crystallization(growth_count)
     
     return {
         'positions': positions.tolist(),
@@ -63,14 +63,12 @@ def get_generate():
 # ニューラルネットワークの最適化（ユーザーが気に入ったときだけ呼ばれる）
 @app.get('/update/{isGood}')
 def get_learn(isGood: bool):
-    global r_prob
-    
     # リアクションが良いものであれば学習する
     if isGood:
-        model.update()
+        obj_model.update()
     
     # 新たに結晶化
-    positions, normals = model.crystallization(growth_count)
+    positions, normals = obj_model.crystallization(growth_count)
     
     return {
         'positions': positions.tolist(),

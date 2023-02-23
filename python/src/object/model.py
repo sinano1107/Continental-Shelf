@@ -9,9 +9,9 @@ from .lib.growth import growth
 from .lib.normalize import normalize
 
 
-class Model(nn.Module):
+class ObjectModel(nn.Module):
     def __init__(self):
-        super(Model, self).__init__()
+        super(ObjectModel, self).__init__()
         self.l1 = nn.Linear(1, 128)
         self.l2 = nn.Linear(128, 128)
         
