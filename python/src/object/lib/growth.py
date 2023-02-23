@@ -36,6 +36,9 @@ def growth(positions: np.ndarray, normals: np.ndarray, select_mesh_index: int, r
     render = False :
         表をレンダリングするか
     '''
+    if r == 0:
+        return positions, normals, []
+    
     positions = positions.copy()
     normals = normals.copy()
     
