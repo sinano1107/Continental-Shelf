@@ -30,27 +30,39 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            OrbitView(entity: model, firstRadius: 6)
-                .ignoresSafeArea()
-                .toolbar {
-                    // リセットボタン
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            getData(endpoint: "tetrahedron")
-                        }) {
-                            Image(systemName: "arrow.clockwise")
+            ZStack {
+                OrbitView(entity: model, firstRadius: 3)
+                    .ignoresSafeArea()
+                    .toolbar {
+                        // リセットボタン
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                getData(endpoint: "generate")
+                            }) {
+                                Image(systemName: "arrow.clockwise")
+                            }
                         }
-                    }
-                    // 成長ボタン
-                    ToolbarItem(placement: .bottomBar) {
+                }
+                VStack {
+                    Spacer()
+                    HStack {
                         Button(action: {
-                            getData(endpoint: "growth")
+                            getData(endpoint: "update/false")
                         }) {
-                            Image(systemName: "goforward.plus")
+                            Text("👎")
+                                .font(.largeTitle)
+                        }
+                        Spacer()
+                        Button(action: {
+                            getData(endpoint: "update/true")
+                        }) {
+                            Text("👍")
                                 .font(.largeTitle)
                         }
                     }
+                    .padding(.all)
                 }
+            }
         }
     }
     
