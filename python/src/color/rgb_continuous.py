@@ -28,14 +28,18 @@ class Policy(nn.Module):
         x = F.relu(self.l2(x))
         
         red_mean = self.red_mean_linear(x)
+        red_mean = torch.clamp(red_mean, 0, 1)
         red_log_std = self.red_log_std_linear(x)
+        # ! これ無条件で0になってて exp とるわけだから標準偏差が1固定な訳で全く意味がないぞ
         red_log_std = torch.clamp(red_log_std, 0, 0)
         
         green_mean = self.green_mean_linear(x)
+        green_mean = torch.clamp(green_mean, 0, 1)
         green_log_std = self.green_log_std_linear(x)
         green_log_std = torch.clamp(green_log_std, 0, 0)
         
         blue_mean = self.blue_mean_linear(x)
+        blue_mean = torch.clamp(blue_mean, 0, 1)
         blue_log_std = self.blue_log_std_linear(x)
         blue_log_std = torch.clamp(blue_log_std, 0, 0)
         
@@ -44,24 +48,24 @@ class Policy(nn.Module):
     def sample(self):
         red_mean, red_log_std, green_mean, green_log_std, blue_mean, blue_log_std = self.forward()
         
-        red_std = red_log_std.exp()
-        green_std = green_log_std.exp()
-        blue_std = blue_log_std.exp()
+        red_std = 0.3
+        green_std = 0.3
+        blue_std = 0.3
         
-        normal = Normal(red_mean, red_std)
-        red = normal.sample()
-        red_prob = normal.log_prob(red)
-        red = torch.clamp(red, 0, 1)
-        
-        normal = Normal(green_mean, green_std)
-        green = normal.sample()
-        green_prob = normal.log_prob(green)
-        green = torch.clamp(green, 0, 1)
-        
-        normal = Normal(blue_mean, blue_std)
-        blue = normal.sample()
-        blue_prob = normal.log_prob(blue)
-        blue = torch.clamp(blue, 0, 1)
+        first = True
+        while first or red < 0 or green < 0 or blue < 0 or 1 < red or 1 < green or 1 < blue:
+            first = False
+            normal = Normal(red_mean, red_std)
+            red = normal.sample()
+            red_prob = normal.log_prob(red)
+            
+            normal = Normal(green_mean, green_std)
+            green = normal.sample()
+            green_prob = normal.log_prob(green)
+            
+            normal = Normal(blue_mean, blue_std)
+            blue = normal.sample()
+            blue_prob = normal.log_prob(blue)
         
         return red, red_prob, green, green_prob, blue, blue_prob
 
@@ -73,7 +77,7 @@ def difference(rgb, target):
 
 
 if __name__ == '__main__':
-    torch.manual_seed(117)
+    torch.manual_seed(1)
     epochs = 1000
     
     pi = Policy()
@@ -88,9 +92,10 @@ if __name__ == '__main__':
         
         dif = difference(rgb, target)
         # 仮想的な報酬をdifから算出
-        reward = dif <= 0.2
+        reward = dif <= 0.1
 
         if reward:
+            # ! prob が 負の値になるのがよくわからない
             loss = -(r_prob * g_prob * b_prob)
             optimizer.zero_grad()
             loss.backward()
