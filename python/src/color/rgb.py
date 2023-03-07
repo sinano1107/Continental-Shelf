@@ -12,6 +12,7 @@ class Policy(nn.Module):
         self.l1 = nn.Linear(1, 128)
         self.l2 = nn.Linear(128, 3)
     
+    # ? sigmoid関数ではなく、正規分布を利用した出力に変更して、観察する事は有意義だと思う
     def forward(self):
         input = torch.randn(1)
         x = F.relu(self.l1(input))
