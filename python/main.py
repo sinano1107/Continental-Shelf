@@ -65,7 +65,7 @@ def get_generate():
         'rgb': rgb
     }
 
-# ニューラルネットワークの最適化（ユーザーが気に入ったときだけ呼ばれる）
+# ニューラルネットワークの最適化
 @app.get('/update/{isGood}')
 def get_learn(isGood: bool):
     # リアクションが良いものであれば学習する
